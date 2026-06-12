@@ -144,10 +144,26 @@ jobs:
       # env:
         # GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
-    - name: Clean up old firmware releases
-      uses: eugene-betker/delete-old-releases@v1
-      with:
-        keep_latest: 2
-        delete_tags: true
+      # 2. 清理旧的 Release，只保留最近 3 个
+    - name: Cleanup old releases
       env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # 设置需要保留的数量
+        KEEP_COUNT=3
+          
+        # 获取所有 release 的 tag 名称（默认按时间倒序排列）
+        # 跳过前 KEEP_COUNT 个，剩下的就是需要删除的
+        TAGS_TO_DELETE=$(gh release list --limit 100 --json tagName -q ".[$KEEP_COUNT:] | .[].tagName")
+          
+        if [ -z "$TAGS_TO_DELETE" ]; then
+          echo "没有需要删除的旧版本。"
+        else
+          echo "即将删除以下旧版本:"
+          echo "$TAGS_TO_DELETE"
+            
+          for tag in $TAGS_TO_DELETE; do
+            echo "正在删除 Release: $tag"
+            gh release delete "$tag" -y --cleanup-tag
+          done
+       fi
