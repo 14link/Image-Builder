@@ -91,29 +91,6 @@ jobs:
         name: ImmortalWrt-firmware-${{ env.PROFILE }}-${{ env.FILE_DATE }}
         path: /tmp/bin_firmware
 
-    - name: Organize files
-      id: organize
-      if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
-      run: |
-        cd /tmp/bin_firmware/*/*
-        rm -rf packages && mkdir packages
-        find -name "*esxi-flat.vmdk*" | xargs -i mv -f {} packages
-        find -name "*kernel.bin*" | xargs -i mv -f {} packages
-        find -name "*rootfs.img*" | xargs -i mv -f {} packages
-        find -name "*.manifest*" | xargs -i mv -f {} packages
-        find -name "*vmlinuz*" | xargs -i mv -f {} packages
-        find -name "*esxi.vmdk*" | xargs -i mv -f {} packages      
-        find -name "*profiles.json*" | xargs -i rm -rf {}
-        rm -rf packages
-        echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "status=success" >> $GITHUB_OUTPUT
-
-    #    find -name "*rootfs*" | xargs -i mv -f {} packages
-    #    find -name "*sha256sums*" | xargs -i rm -rf {} packages
-    #    find -name "*version.buildinfo*" | xargs -i rm -rf {} packages
-    #    find -name "*feeds.buildinfo*" | xargs -i rm -rf {} packages
-
-
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@main
       with:
@@ -145,4 +122,4 @@ jobs:
           [固件源码](https://github.com/immortalwrt/immortalwrt)
           由衷感谢所有为openwrt无私奉献的大佬们
           📥 固件下载
-        artifacts: ${{ env.FIRMWARE }}/*
+        artifacts: /tmp/bin_firmware/*
