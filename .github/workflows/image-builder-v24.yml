@@ -127,3 +127,13 @@ jobs:
           由衷感谢所有为openwrt无私奉献的大佬们
           📥 固件下载
         artifacts: /tmp/bin_firmware/*
+
+
+    - name: Remove old Releases
+      uses: dev-drprasad/delete-older-releases@master
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      with:
+        keep_latest: 9
+        delete_tags: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
