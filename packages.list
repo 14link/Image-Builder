@@ -13,12 +13,7 @@ luci-theme-argon
 luci-app-argon-config
 luci-i18n-argon-config-zh-cn
 luci-i18n-quickstart-zh-cn
-luci-app-mosdns
 luci-i18n-mosdns-zh-cn
-luci-lib-fs
-luci-lua-runtime
-luci-app-filetransfer
-luci-i18n-filetransfer-zh-cn
 luci-app-ssr-plus
 -automount
 bash
