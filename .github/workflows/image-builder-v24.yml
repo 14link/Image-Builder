@@ -74,6 +74,7 @@ jobs:
 
     - name: Compile firmware
       run: |
+        sh prepare-packages.sh
         cd $ROOT_DIRECTORY
         PACKAGES=$(cat $ROOT_DIRECTORY/files/packages.list | tr '\n' ' ')
         sudo make image PROFILE="$PROFILE" PACKAGES="$PACKAGES" FILES="files" ROOTFS_PARTSIZE="800"
